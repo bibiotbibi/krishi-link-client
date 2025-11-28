@@ -8,7 +8,7 @@ const MyPosts = () => {
 
   useEffect(() => {
     if (user?.email) {
-      fetch(`http://localhost:3000/products?ownerEmail=${user.email}`)
+      fetch(`https://krishi-link-server-flax.vercel.app/products?ownerEmail=${user.email}`)
         .then(res => res.json())
         .then(data => setMyCrops(data))
         .catch(err => console.error(err));
@@ -28,7 +28,7 @@ const MyPosts = () => {
     });
 
     if (confirm.isConfirmed) {
-      await fetch(`http://localhost:3000/products/${id}`, {
+      await fetch(`https://krishi-link-server-flax.vercel.app/products/${id}`, {
         method: 'DELETE'
       });
       setMyCrops(myCrops.filter(crop => crop._id !== id));
@@ -54,7 +54,7 @@ const MyPosts = () => {
     });
 
     if (formValues) {
-      await fetch(`http://localhost:3000/products/${id}`, {
+      await fetch(`https://krishi-link-server-flax.vercel.app/products/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formValues)

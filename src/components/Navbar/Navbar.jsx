@@ -1,7 +1,7 @@
 import React, { use } from 'react';
-import { NavLink } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import { AuthContext } from '../../contexts/AuthContext';
-import { div } from 'framer-motion/client';
+// import { div } from 'framer-motion/client';
 
 
 const Navbar = () => {
@@ -15,6 +15,7 @@ const Navbar = () => {
     const links = <>
         <li><NavLink to="/">Home</NavLink></li>
         <li><NavLink to="/allcrops">All Crops</NavLink></li>
+
         {
             user && <>
                 <li><NavLink to="/addcrops">Add crops</NavLink></li>
@@ -39,17 +40,18 @@ const Navbar = () => {
                 </div>
                 <div>
 
-                    <div className='flex justify-center'
+                    <Link to='/' className='flex justify-center'
                        >
                         <img className=' w-10 h-13' src="https://i.ibb.co.com/3mshTGkY/Scarica-Vettori-Immagini-Foto-e-Video-Gratuiti-1-removebg-preview.png" alt="" />
                         <a className=" text-xl font-bold mt-3">Krishi Link</a>
-                    </div>
+                    </Link>
 
 
                 </div>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1 ">
+                    
                     {links}
                 </ul>
             </div>

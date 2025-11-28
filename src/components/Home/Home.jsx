@@ -5,7 +5,7 @@ import HowItWorks from '../HowWorks/HowItWorks';
 import LatestCrops from '../LatestCrops/LatestCrops';
 import StayUp from '../StayUp/StayUp';
 import Story from '../Story/Story';
-const latestCropsPromise = fetch('http://localhost:3000/latest-crops')
+const latestCropsPromise = fetch('https://krishi-link-server-flax.vercel.app/latest-crops')
 .then(res => res.json());
 
 const Home = () => {

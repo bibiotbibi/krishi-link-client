@@ -9,7 +9,7 @@ const LatestCrops = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3000/latest-crops')
+    fetch('https://krishi-link-server-flax.vercel.app/latest-crops')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch crops');
         return res.json();

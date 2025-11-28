@@ -66,7 +66,7 @@ const router = createBrowserRouter([
      {
   path: '/cropdetails/:id',
   loader: ({ params }) =>
-    fetch(`http://localhost:3000/products/${params.id}`).then(res => res.json()),
+    fetch(`https://krishi-link-server-flax.vercel.app/products/${params.id}`).then(res => res.json()),
   element: (
     <PrivateRoute>
       <CropDetails />
@@ -77,7 +77,7 @@ const router = createBrowserRouter([
       {
         path: "/details",
         loader: async () => {
-          const res = await fetch("http://localhost:3000/products");
+          const res = await fetch("https://krishi-link-server-flax.vercel.app/products");
           if (!res.ok) throw new Error('Failed to fetch crops');
           return res.json(); 
         },

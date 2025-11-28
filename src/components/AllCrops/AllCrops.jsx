@@ -11,7 +11,7 @@ const AllCrops = () => {
   
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:3000/products")
+    fetch("https://krishi-link-server-flax.vercel.app/products")
       .then((res) => res.json())
       .then((res) => {
         setCrops(res);

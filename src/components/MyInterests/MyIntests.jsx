@@ -6,7 +6,7 @@ const MyIntests = () => {
     const [intarests, setInterests] = useState([])
     useEffect(() => {
         if (user?.email) {
-            fetch(`http://localhost:3000/interest?email=${user.email}`)
+            fetch(`https://krishi-link-server-flax.vercel.app/interest?email=${user.email}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);

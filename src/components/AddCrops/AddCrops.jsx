@@ -31,7 +31,7 @@ const AddCrops = () => {
         };
 
         try {
-            const res = await fetch('http://localhost:3000/products', {
+            const res = await fetch('https://krishi-link-server-flax.vercel.app/products', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cropData)

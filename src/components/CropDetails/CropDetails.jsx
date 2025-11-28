@@ -38,7 +38,7 @@ const CropDetails = () => {
   
  const handleInterestUpdate = async (interestId, newStatus) => {
   try {
-    const res = await fetch(`http://localhost:3000/interest/${interestId}`, {
+    const res = await fetch(`https://krishi-link-server-flax.vercel.app/interest/${interestId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: newStatus }),
@@ -100,7 +100,7 @@ const CropDetails = () => {
       status: "pending",
     };
 
-    fetch("http://localhost:3000/interest", {
+    fetch("https://krishi-link-server-flax.vercel.app/interest", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(newInterest),
@@ -127,7 +127,7 @@ const CropDetails = () => {
   useEffect(() => {
     if (!cropId) return;
     setLoading(true);
-    fetch(`http://localhost:3000/products/${cropId}`)
+    fetch(`https://krishi-link-server-flax.vercel.app/products/${cropId}`)
       .then((res) => res.json())
       .then((res) => {
         setCrop(res.data);
@@ -139,7 +139,7 @@ const CropDetails = () => {
         console.log(error);
       });
 
-    fetch(`http://localhost:3000/interest/crop/${cropId}`)
+    fetch(`https://krishi-link-server-flax.vercel.app/interest/crop/${cropId}`)
       .then((res) => res.json())
       .then((data) => {
         setInterests(data);
