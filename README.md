@@ -1,16 +1,43 @@
-# React + Vite
+# Krishi Link
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Krishi Link** is a platform connecting farmers, suppliers, and agricultural experts to promote sustainable agriculture, share knowledge, and ensure fair market access.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📸 Screenshot
+![Krishi Link Screenshot](https://i.ibb.co.com/mrgDRx2D/Screenshot-34.png)
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Technologies Used
+- **Frontend:** React.js, Tailwind CSS  
+- **Backend:** Node.js, Express.js (if any)  
+- **Database:** MongoDB / Firebase (adjust as per your project)  
+- **Others:** Axios, React Router, React Query  
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Core Features
+- Browse and search for agricultural products  
+- Connect with suppliers and experts  
+- Access market prices and updates  
+- User-friendly interface for farmers  
+- Purchase and order management  
+
+---
+
+## 📦 Dependencies
+- React  
+- Axios  
+- React Router DOM  
+- Tailwind CSS  
+- @tanstack/react-query  
+*(Add any other dependencies you used)*
+
+---
+
+## 🚀 How to Run Locally
+
+1. Clone the repository:  
+   ```bash
+   git clone https://github.com/yourusername/krishi-link.git
