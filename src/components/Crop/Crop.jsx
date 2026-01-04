@@ -1,36 +1,58 @@
-import React from 'react';
-import { Link } from 'react-router';
-import { motion } from "framer-motion";
+import React from "react";
+import { Link } from "react-router";
 
-const Crop = ({crop}) => {
-    const {_id, image, title,category, status, price} = crop;
-    return (
-         
-    <motion.div
-      className="bg-white rounded-2xl shadow-md overflow-hidden w-full max-w-sm mx-auto cursor-pointer"
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.05, boxShadow: "0px 20px 30px rgba(0,0,0,0.2)" }}
-      transition={{ duration: 0.3, ease: "easeOut" }} >
-      <figure>
-        <img src={image} alt={title}
-          className="w-full h-64 object-cover rounded-t-2xl"
-        />
-      </figure>
+const Crop = ({ crop }) => {
+  const { _id, image, title, category,  price } = crop;
 
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
-          <div className="badge badge-secondary">{category}</div>
-        </div>
+  return (
+<Link to={`/cropdetails/${crop._id}`}>
+  <div className="relative bg-white rounded-2xl shadow hover:shadow-xl overflow-hidden w-full max-w-sm mx-auto group cursor-pointer">
 
-        <div className="flex justify-between items-center">
-          <p className="text-xl font-semibold text-green-700">${price}</p>
-          <div className="badge badge-outline">{status}</div>
-        </div>
-      </div>
-    </motion.div>
-    );
+    {/* Image */}
+    <figure className="relative">
+      <img
+        src={image}
+        alt={title}
+        className="w-full h-34 object-cover rounded-t-2xl"
+      />
+
+      {/* Category Badge */}
+      <span className="absolute text-black top-3 right-3 shadow-2xl badge badge-secondary">
+        {category}
+      </span>
+    </figure>
+
+    {/* Content */}
+ <div className="p-6 relative z-10 flex flex-col gap-4">
+  {/* Title */}
+  <h2 className="font-semibold text-gray-800">
+    {title}
+  </h2>
+
+  {/* Price + Button */}
+  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+    <p className="text-xl font-semibold text-green-700 text-center sm:text-left">
+      ${price}
+    </p>
+
+    <button
+      onClick={(e) => {
+        e.preventDefault();
+        // addToCart(crop);
+      }}
+      className="btn btn-sm bg-primary text-white w-full sm:w-auto"
+    >
+      Details
+    </button>
+  </div>
+</div>
+
+
+  </div>
+</Link>
+
+
+  );
 };
 
 export default Crop;

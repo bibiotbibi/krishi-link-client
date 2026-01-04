@@ -24,19 +24,17 @@ const LatestCrops = () => {
 
   return (
     <div className='mx-auto w-11/12'>
-      <h2 className='text-6xl text-primary border-r-2 mx-auto w-5/12 border-b-2 border-b-primary font-bold m-15 shadow-xl'>
+      <h2 className='text-5xl text-primary border-r-2 mx-auto w-3/12 border-b-2 border-b-primary font-bold m-15 shadow-xl'>
         ☁️ Latest Crops
       </h2>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10'>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10'>
         {crops.map(crop => (
           <Crop key={crop._id} crop={crop} />
         ))}
       </div>
 
-      <Link className="bg-primary btn md:w-2/12 w-full text-center  mx-auto md:mx-140 text-white p-7 text-2xl my-20" to="allcrops">
-        All Crops
-      </Link>
+      
     </div>
   );
 };

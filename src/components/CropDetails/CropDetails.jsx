@@ -2,12 +2,16 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import { useParams } from "react-router";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router";
+
 
 const CropDetails = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const interestsModalRef = useRef(null);
   const cropId = id;
+  const navigate = useNavigate();
+
 
   const [crop, setCrop] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,16 +21,24 @@ const CropDetails = () => {
   const [interests, setInterests] = useState([]);
   const [hasInterest, setHasInterest] = useState(false);
 
-  
+
   const handleInterestsModalOpen = () => {
-    if (user?.email === crop?.owner?.ownerEmail) {
+    if (!user) {
+      navigate("/login", { state: { from: `/cropdetails/${cropId}` } });
+      return;
+    }
+
+    if (user.email === crop?.owner_email) {
       Swal.fire("You cannot place interest on your own crop");
       return;
     }
+
+
     if (hasInterest) {
       Swal.fire("You have already sent an interest for this crop");
       return;
     }
+
     interestsModalRef.current.showModal();
 
     const firstInput = interestsModalRef.current.querySelector(
@@ -35,47 +47,49 @@ const CropDetails = () => {
     firstInput?.focus();
   };
 
-  
- const handleInterestUpdate = async (interestId, newStatus) => {
-  try {
-    const res = await fetch(`https://krishi-link-server-flax.vercel.app/interest/${interestId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: newStatus }),
-    });
-
-    const data = await res.json();
-    console.log("PATCH response:", data);
-
-    if (!res.ok) throw new Error(data.message || "Failed to update interest status");
-
-    setInterests(prev =>
-      prev.map(i => (i._id === interestId ? { ...i, status: data.status ?? newStatus } : i))
-    );
-
-    Swal.fire({
-      icon: "success",
-      title: "Updated",
-      text: `Interest ${newStatus}`,
-      timer: 1500,
-      showConfirmButton: false,
-    });
-  } catch (err) {
-    console.error(err);
-    setInterests(prev =>
-      prev.map(i => (i._id === interestId ? { ...i, status: "pending" } : i))
-    );
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Could not update interest status. Try again.",
-    });
-    
-  }
-};
 
 
-  
+
+  const handleInterestUpdate = async (interestId, newStatus) => {
+    try {
+      const res = await fetch(`https://krishi-link-server-flax.vercel.app/interest/${interestId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      const data = await res.json();
+      console.log("PATCH response:", data);
+
+      if (!res.ok) throw new Error(data.message || "Failed to update interest status");
+
+      setInterests(prev =>
+        prev.map(i => (i._id === interestId ? { ...i, status: data.status ?? newStatus } : i))
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: "Updated",
+        text: `Interest ${newStatus}`,
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      console.error(err);
+      setInterests(prev =>
+        prev.map(i => (i._id === interestId ? { ...i, status: "pending" } : i))
+      );
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Could not update interest status. Try again.",
+      });
+
+    }
+  };
+
+
+
   const handleInterestsSubmit = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -115,7 +129,7 @@ const CropDetails = () => {
           timer: 1500,
         });
 
-        newInterest._id = data._id || data; 
+        newInterest._id = data._id || data;
         setInterests([...interests, newInterest]);
         setHasInterest(true);
         interestsModalRef.current.close();
@@ -123,7 +137,7 @@ const CropDetails = () => {
       .catch((err) => console.error(err));
   };
 
- 
+
   useEffect(() => {
     if (!cropId) return;
     setLoading(true);
@@ -156,37 +170,97 @@ const CropDetails = () => {
 
   return (
     <div>
-     
-      <div className="hero  min-h-screen w-8/12 bg-base-100 mx-auto">
-      {/* <img className="w-full h-190" src="https://i.ibb.co.com/RGTG810w/100-Light-Backgrounds.jpg" alt="" /> */}
-       
-        <div className="hero-content flex-col lg:flex-row  rounded-2xl">
+
+  
+  <div className="max-w-7xl mx-auto px-4 py-10">
+
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+      {/* LEFT IMAGE SECTION */}
+      <div className="lg:col-span-5">
+        <div className="border rounded-lg p-3">
           <img
-            src={crop?.image}
-            className="max-w-sm  md:mb-50 rounded-lg shadow-2xl w-full h-110 object-cover"
-            alt=""
+            src={crop.image}
+            alt={crop.title}
+            className="w-full h-[420px] object-cover rounded"
           />
-          <div className="mt-0 md:mt-100 shadow-2xl p-7 space-y-4  rounded-lg md:absolute md:ml-100 bg-white">
-            <h1 className="text-5xl font-bold text-primary">{crop?.title}</h1>
-            <p className="py-6">{crop?.description}</p>
-            <p>Category: {crop?.category}</p>
-            <p>Price: ${crop?.price}</p>
-            <p>Quantity: {crop?.quantity}</p>
-            <p>Location: {crop?.location}</p>
-            <p>
-              Owner: {crop?.owner_name} ({crop?.owner_email})
-            </p>
-            <button
-              className="btn btn-primary mt-3"
-              onClick={handleInterestsModalOpen}
-            >
-              I want to buy this crop
-            </button>
-          </div>
+        </div>
+
+        <div className="flex gap-3 mt-3">
+          {[1, 2, 3].map((_, i) => (
+            <img
+              key={i}
+              src={crop.image}
+              className="w-20 h-20 object-cover border rounded cursor-pointer hover:border-primary"
+              alt=""
+            />
+          ))}
         </div>
       </div>
 
-      
+      {/* RIGHT DETAILS SECTION */}
+      <div className="lg:col-span-7 space-y-4">
+
+        {/* TITLE */}
+        <h1 className="text-2xl font-semibold">
+          {crop.title}
+        </h1>
+
+        {/* RATING
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          ⭐⭐⭐⭐☆ <span>(15 Ratings)</span>
+        </div> */}
+
+        {/* PRICE */}
+        <div className="bg-orange-50 p-4 rounded">
+          <p className="text-3xl font-bold text-orange-600">
+            ৳ {crop.price}
+          </p>
+          <p className="text-sm text-gray-500 line-through">
+            ৳ {crop.price + 200}
+          </p>
+        </div>
+
+        {/* DELIVERY */}
+        <div className="border rounded p-4 space-y-2 text-sm">
+          <p><span className="font-semibold">Location:</span> {crop.location}</p>
+          <p><span className="font-semibold">Category:</span> {crop.category}</p>
+          <p className="text-green-600 font-medium">
+            ✔ Cash on Delivery Available
+          </p>
+        </div>
+
+        {/* QUANTITY */}
+        <div className="flex items-center gap-3">
+          <span className="font-semibold">Quantity:</span>
+          <span>{crop.quantity}</span>
+        </div>
+
+        {/* BUY BUTTON */}
+        <button
+          onClick={handleInterestsModalOpen}
+          className="w-full bg-primary text-white py-3 rounded text-lg hover:bg-green-700 transition"
+        >
+          Send Purchase Request
+        </button>
+
+      </div>
+    </div>
+
+    
+    <div className="mt-10 border rounded p-6">
+      <h2 className="text-xl font-semibold mb-3">Product Details</h2>
+      <p className="text-gray-600 leading-relaxed">
+        {crop.description}
+      </p>
+    </div>
+
+  </div>
+
+
+
+
+
       <dialog
         ref={interestsModalRef}
         className="modal modal-bottom sm:modal-middle"
@@ -243,7 +317,7 @@ const CropDetails = () => {
             </button>
           </fieldset>
           <div className="modal-action flex - justify-between items-center">
-             <img className="w-20 " src="https://i.ibb.co.com/WN2P5mhg/4-Bxuz-Ch-MMm-1.gif" alt="" />
+            <img className="w-20 " src="https://i.ibb.co.com/WN2P5mhg/4-Bxuz-Ch-MMm-1.gif" alt="" />
             <button
               type="button"
               className="btn btn-secondary"
@@ -255,85 +329,90 @@ const CropDetails = () => {
         </form>
       </dialog>
 
-      
-      {user?.email === crop?.owner?.ownerEmail && (
-        <div className="mt-10 p-8 bg-white shadow-lg rounded-2xl">
-          <h1 className="text-4xl my-6 text-center font-bold text-peimery">
-            Interests for this Crop: <span>{interests.length}</span>
-          </h1>
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">
-            Received Interests
-          </h2>
-          {interests.length === 0 ? (
-            <p className="text-center text-gray-500 py-6 text-lg">
-              No interests received yet.
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="table w-full">
-                <thead>
-                  <tr className="bg-green-100 text-green-800 text-left">
-                    <th className="px-6 py-3 font-semibold">Crop</th>
-                    <th className="px-6 py-3 font-semibold">Owner</th>
-                    <th className="px-6 py-3 font-semibold">Buyer Name</th>
-                    <th className="px-6 py-3 font-semibold">Quantity</th>
-                    <th className="px-6 py-3 font-semibold">Message</th>
-                    <th className="px-6 py-3 font-semibold">Status</th>
-                    <th className="px-6 py-3 font-semibold">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {interests.map((interest, idx) => (
-                    <tr
-                      key={idx}
-                      className="hover:bg-green-50 transition-colors duration-200 border-b last:border-none"
-                    >
-                      <td className="px-6 py-3 text-gray-700">{crop?.title}</td>
-                      <td className="px-6 py-3 text-gray-700">{crop?.owner_name}</td>
-                      <td className="px-6 py-3 text-gray-700">{interest.userName}</td>
-                      <td className="px-6 py-3 text-gray-700">{interest.quantity}</td>
-                      <td className="px-6 py-3 text-gray-700">{interest.message}</td>
-                      <td
-                        className={`px-6 py-3 font-medium ${
-                          interest.status === "accepted"
-                            ? "text-primary"
-                            : interest.status === "rejected"
-                            ? "text-red-400"
-                            : "text-yellow-600"
-                        }`}
-                      >
-                        {interest.status}
-                      </td>
-                      <td className="px-6 py-3 flex gap-3">
-                        {interest.status === "pending" && (
-                          <>
-                            <button
-                              className="btn btn-sm bg-secondary hover:bg-green-600 text-white border-none"
-                              onClick={() =>
-                                handleInterestUpdate(interest._id, "accepted")
-                              }
-                            >
-                              Accept
-                            </button>
-                            <button
-                              className="btn btn-sm bg-red-400 hover:bg-red-600 text-white border-none"
-                              onClick={() =>
-                                handleInterestUpdate(interest._id, "rejected")
-                              }
-                            >
-                              Reject
-                            </button>
-                          </>
-                        )}
-                      </td>
+
+      {user &&
+        crop &&
+        user.email === crop?.owner?.ownerEmail && (
+          <div className="mt-10 p-8 bg-white shadow-lg rounded-2xl">
+            <h1 className="text-4xl my-6 text-center font-bold text-primary">
+              Interests for this Crop: <span>{interests.length}</span>
+            </h1>
+
+            <h2 className="text-2xl font-semibold mb-6 text-gray-700">
+              Received Interests
+            </h2>
+
+            {interests.length === 0 ? (
+              <p className="text-center text-gray-500 py-6 text-lg">
+                No interests received yet.
+              </p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="table w-full">
+                  <thead>
+                    <tr className="bg-green-100 text-green-800 text-left">
+                      <th className="px-6 py-3">Crop</th>
+                      <th className="px-6 py-3">Owner</th>
+                      <th className="px-6 py-3">Buyer Name</th>
+                      <th className="px-6 py-3">Quantity</th>
+                      <th className="px-6 py-3">Message</th>
+                      <th className="px-6 py-3">Status</th>
+                      <th className="px-6 py-3">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
+                  </thead>
+
+                  <tbody>
+                    {interests.map((interest, idx) => (
+                      <tr
+                        key={idx}
+                        className="hover:bg-green-50 border-b last:border-none"
+                      >
+                        <td className="px-6 py-3">{crop?.title}</td>
+                        <td className="px-6 py-3">{crop?.owner_name}</td>
+                        <td className="px-6 py-3">{interest.userName}</td>
+                        <td className="px-6 py-3">{interest.quantity}</td>
+                        <td className="px-6 py-3">{interest.message}</td>
+                        <td
+                          className={`px-6 py-3 font-medium ${interest.status === "accepted"
+                              ? "text-primary"
+                              : interest.status === "rejected"
+                                ? "text-red-500"
+                                : "text-yellow-600"
+                            }`}
+                        >
+                          {interest.status}
+                        </td>
+                        <td className="px-6 py-3 flex gap-3">
+                          {interest.status === "pending" && (
+                            <>
+                              <button
+                                className="btn btn-sm bg-secondary text-white"
+                                onClick={() =>
+                                  handleInterestUpdate(interest._id, "accepted")
+                                }
+                              >
+                                Accept
+                              </button>
+                              <button
+                                className="btn btn-sm bg-red-400 text-white"
+                                onClick={() =>
+                                  handleInterestUpdate(interest._id, "rejected")
+                                }
+                              >
+                                Reject
+                              </button>
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
     </div>
   );
 };

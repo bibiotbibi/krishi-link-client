@@ -3,14 +3,14 @@
 
 button:hover {
   color: #82ffc9;
-  box-shadow: inset 0 0 10px rgb(137, 253, 153), 0 0 9px 3px rgba(27, 253, 156, 0.2);
+  box-shadow: inset 0 0 1px rgb(137, 253, 153), 0 0 2px 2px rgba(27, 253, 156, 0.2);
 }
 
 button:before {
   content: "";
   position: absolute;
   left: -4em;
-  width: 4em;
+  ;
   height: 100%;
   top: 0;
   transition: transform .4s ease-in-out;

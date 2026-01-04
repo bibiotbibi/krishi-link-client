@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+import ThemeProvider from '../../../ASSIGNMENT/krishi-link-client/src/contexts/ThemeContext.jsx';
 
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
@@ -21,6 +22,13 @@ import CropDetails from './components/CropDetails/CropDetails.jsx';
 import Details from './components/Details/Details.jsx';
 import ErrorPage from './components/ErrorPage/ErrorPage.jsx';
 import PrivateRoute from './routes/PrivateRoute.jsx';
+import NatureSection from './components/NatureSection/NatureSection.jsx';
+import Story from './components/Story/Story.jsx';
+import Dashboard from './Pages/Dashboard/Dashboard.jsx';
+import DashboardLayout from './layout/DashboardLayout.jsx';
+import AboutUs from './components/AboutUs/AboutUs.jsx';
+import About from './components/About/About.jsx';
+
 
 
 const router = createBrowserRouter([
@@ -53,33 +61,42 @@ const router = createBrowserRouter([
         element: <AddCrops></AddCrops>
       },
       {
+        path: '/story',
+        element: <Story></Story>
+      },
+      {
+        path: "/naturesection",
+        element: <NatureSection></NatureSection>
+      },
+      {
         path: "/myinterests",
         element: <PrivateRoute>
           <MyIntests></MyIntests>
         </PrivateRoute>
-          
+
       },
       {
         path: "/profile",
         element: <PrivateRoute><Profile></Profile></PrivateRoute>
       },
-     {
-  path: '/cropdetails/:id',
-  loader: ({ params }) =>
-    fetch(`https://krishi-link-server-flax.vercel.app/products/${params.id}`).then(res => res.json()),
-  element: (
-    <PrivateRoute>
-      <CropDetails />
-    </PrivateRoute>
-  )
-},
+      
+      {
+        path: '/cropdetails/:id',
+        loader: ({ params }) =>
+          fetch(`https://krishi-link-server-flax.vercel.app/products/${params.id}`).then(res => res.json()),
+        element: (
+
+          <CropDetails />
+
+        )
+      },
 
       {
         path: "/details",
         loader: async () => {
           const res = await fetch("https://krishi-link-server-flax.vercel.app/products");
           if (!res.ok) throw new Error('Failed to fetch crops');
-          return res.json(); 
+          return res.json();
         },
         element: <Details></Details>,
       },
@@ -92,13 +109,46 @@ const router = createBrowserRouter([
 
     ]
   },
+  {
+    path: "/about",
+    Component: About,
+  },
+  {
+    path: "/dashboardlayout",
+    Component: DashboardLayout,
+    children: [
+      {
+        path: "/dashboardlayout/dashboard",
+        element: <Dashboard></Dashboard>
+      },
+
+      {
+        path: "/dashboardlayout/myinterests",
+        element: <PrivateRoute>
+          <MyIntests></MyIntests>
+        </PrivateRoute>
+
+      },
+      {
+        path: '/dashboardlayout/myposts',
+        element: <MyPosts></MyPosts>
+      },
+      {
+        path: "/dashboardlayout/profile",
+        element: <PrivateRoute><Profile></Profile></PrivateRoute>
+      },
+    ]
+  },
+
 
 ]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvaider>
-      <RouterProvider router={router} />
-    </AuthProvaider>
-  </StrictMode>,
+    <ThemeProvider>
+      <AuthProvaider>
+        <RouterProvider router={router} />
+      </AuthProvaider>
+    </ThemeProvider>
+  </StrictMode>
 )
